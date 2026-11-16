@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Random Group Selector</title>
+
+    <style>
+        /* Essential Bootstrap-like styles for WhatsApp Web compatibility */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.5rem 0.75rem;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: -0.3rem;
+        }
+
+        .row.g-3 {
+            margin: -0.4rem;
+        }
+
+        .row.g-4 {
+            margin: -0.5rem;
+        }
+
+        .row.g-2 {
+            margin: -0.3rem;
+        }
+
+        .row.g-lg-4 {
+            margin: -0.5rem;
+        }
+
+        [class*="col-"] {
+            flex: 1 0 0%;
+            padding: 0.3rem;
+        }
+
+        .col-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .col-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .col-4 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+
+        .col-8 {
+            flex: 0 0 66.666667%;
+            max-width: 66.666667%;
+        }
+
+        @media (min-width: 576px) {
+            .col-sm-3 {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+            .col-sm-4 {
+                flex: 0 0 33.333333%;
+                max-width: 33.333333%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .col-lg-4 {
+                flex: 0 0 33.333333%;
+                max-width: 33.333333%;
+            }
+            .col-lg-8 {
+                flex: 0 0 66.666667%;
+                max-width: 66.666667%;
+            }
+            .order-lg-1 {
+                order: 1;
+            }
+            .order-lg-2 {
+                order: 2;
+            }
+            .d-lg-flex {
+                display: flex !important;
+            }
+        }
+
+        .d-flex {
+            display: flex !important;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        .justify-content-between {
+            justify-content: space-between !important;
+        }
+
+        .justify-content-center {
+            justify-content: center !important;
+        }
+
+        .align-items-center {
+            align-items: center !important;
+        }
+
+        .gap-2 {
+            gap: 0.4rem !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.2rem !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 0.6rem !important;
+        }
+
+        .mt-3 {
+            margin-top: 0.6rem !important;
+        }
+
+        .pt-2 {
+            padding-top: 0.4rem !important;
+        }
+
+        .border-top {
+            border-top: 1px solid #dee2e6 !important;
+        }
+
+        .border-secondary {
+            border-color: #6c757d !important;
+        }
+
+        .text-secondary {
+            color: #6c757d !important;
+        }
+
+        .text-info {
+            color: #0dcaf0 !important;
+        }
+
+        .fw-semibold {
+            font-weight: 600 !important;
+        }
+
+        .fw-bold {
+            font-weight: 700 !important;
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            line-height: 1.3;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.85rem;
+            border-radius: 0.375rem;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .btn-sm {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+
+        .btn-outline-info {
+            color: #0dcaf0;
+            border-color: #0dcaf0;
+            background-color: transparent;
+        }
+
+        .btn-outline-info:hover {
+            color: #000;
+            background-color: #0dcaf0;
+            border-color: #0dcaf0;
+        }
+
+        .btn-outline-light {
+            color: #f8f9fa;
+            border-color: #f8f9fa;
+            background-color: transparent;
+        }
+
+        .btn-outline-light:hover {
+            color: #000;
+            background-color: #f8f9fa;
+            border-color: #f8f9fa;
+        }
+
+        .btn-success {
+            color: #fff;
+            background-color: #198754;
+            border-color: #198754;
+        }
+
+        .btn-success:hover {
+            background-color: #157347;
+            border-color: #146c43;
+        }
+
+        small {
+            font-size: 0.75em;
+        }
+
+        /* Custom styles */
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --accent-blue: #38bdf8;
+            --primary-btn: #2563eb;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: #f8fafc;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .header h1 {
+            font-weight: 800;
+            font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+            margin-bottom: 0.2rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            margin-bottom: 0;
+        }
+
+        /* Number Pool Card */
+        .pool-card {
+            background: rgba(30, 41, 59, 0.98);
+            border: 1px solid #475569;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .pool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+        }
+
+        .pool-header h5 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 0;
+            color: #f1f5f9;
+        }
+
+        .legend-badge {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .legend-badge.completed-legend {
+            color: #f87171;
+            font-weight: 600;
+        }
+
+        .pool-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.3rem;
+            text-align: center;
+        }
+
+        @media (min-width: 992px) {
+            .pool-header {
+                margin-bottom: 0.4rem;
+            }
+            .pool-header h5 {
+                font-size: 0.9rem;
+            }
+            .pool-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.4rem;
+            }
+        }
+
+        .pool-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 6px;
+            padding: 0.2rem 0.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .pool-item.item-maxed {
+            background: rgba(127, 29, 29, 0.25);
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+
+        @media (min-width: 992px) {
+            .pool-item {
+                padding: 0.4rem 0.2rem;
+                border-radius: 8px;
+            }
+        }
+
+        .pool-number {
+            display: inline-flex;
+            width: clamp(26px, 5.5vw, 38px);
+            height: clamp(26px, 5.5vw, 38px);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .available {
+            background: #16a34a;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(22, 163, 74, 0.4);
+        }
+
+        .unavailable {
+            background: #dc2626;
+            color: #fee2e2;
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+            text-decoration: line-through;
+        }
+
+        .status-label {
+            color: #e2e8f0;
+            font-size: 0.5rem;
+            font-weight: 600;
+            margin-top: 0.1rem;
+            line-height: 1.1;
+        }
+
+        .status-sub {
+            color: #86efac;
+            font-size: 0.45rem;
+            line-height: 1.1;
+            margin-top: 1px;
+            font-weight: 600;
+        }
+
+        .status-sub.sub-maxed {
+            color: #fca5a5;
+        }
+
+        /* Progress Bar & Status Message */
+        .progress-status-box {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.8rem;
+        }
+
+        #progressBar {
+            height: 6px;
+            background: #334155;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #progressFill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2563eb, #38bdf8);
+            transition: width 0.4s ease;
+        }
+
+        #message {
+            color: var(--accent-blue);
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-height: 16px;
+            margin: 0.3rem 0 0 0;
+            text-align: center;
+        }
+
+        #message.completed-msg {
+            color: #4ade80;
+        }
+
+        /* Selector Cards */
+        .selector-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 0.75rem;
+            text-align: center;
+            transition: transform 0.25s ease, border-color 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        @media (hover: hover) {
+            .selector-card:hover {
+                transform: translateY(-2px);
+                border-color: var(--accent-blue);
+            }
+        }
+
+        .selector-title {
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .selected-numbers {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.6rem;
+            min-height: 48px;
+            margin-bottom: 0.5rem;
+        }
+
+        .number-ball {
+            height: clamp(32px, 7vw, 40px);
+            width: clamp(32px, 7vw, 40px);
+            border-radius: 50%;
+            background: var(--primary-btn);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.85rem, 2.2vw, 1rem);
+            font-weight: 700;
+            box-shadow: 0 3px 8px rgba(37, 99, 235, 0.4);
+            flex-shrink: 0;
+        }
+
+        .number-ball.placeholder-ball {
+            background: #334155;
+            color: #94a3b8;
+            box-shadow: none;
+        }
+
+        .number-ball.animate {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.2) rotate(-90deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Bottom Section: Stats & Action Buttons */
+        .bottom-controls-section {
+            margin-top: 1rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid #334155;
+        }
+
+        .stats {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 0.35rem 0.3rem;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            height: 100%;
+        }
+
+        .stats h3 {
+            color: var(--accent-blue);
+            margin: 0;
+            font-size: clamp(0.9rem, 2.8vw, 1.2rem);
+            font-weight: 700;
+        }
+
+        .stats small {
+            color: var(--text-muted);
+            font-size: clamp(0.55rem, 1.6vw, 0.65rem);
+            display: block;
+        }
+
+        /* Touch-friendly Buttons */
+        .random-single {
+            width: 100%;
+            min-height: 28px;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .action-btn {
+            min-height: 36px;
+            font-weight: 600;
+            border-radius: 8px;
+            flex: 1 1 auto;
+            max-width: 180px;
+        }
+
+        button:disabled {
+            cursor: not-allowed !important;
+            opacity: 0.5 !important;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 991.98px) {
+            .pool-fixed-wrapper {
+                position: relative;
+                margin-bottom: 0.8rem;
+            }
+
+            .pool-fixed-wrapper .pool-card {
+                border-radius: 12px;
+                padding: 0.4rem 0.5rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                border: 1px solid #475569;
+            }
+        }
+
+        /* Desktop Sticky Sidebar */
+        @media (min-width: 992px) {
+            .pool-fixed-wrapper {
+                position: sticky;
+                top: 1.25rem;
+            }
+            .pool-card {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>🎯 Random Group Selector</h1>
+        <p>Assign 2 unique numbers to each selector (max 2 uses per number).</p>
+    </div>
+
+    <div class="row g-3 g-lg-4">
+
+        <!-- NUMBER SELECTION POOL (Fixed at top on small/medium devices, sticky sidebar on desktop) -->
+        <div class="col-12 col-lg-4 order-lg-2">
+            <div class="pool-fixed-wrapper">
+                <div class="pool-card">
+                    <div class="pool-header">
+                        <h5>Number Selection Pool</h5>
+                        <span class="legend-badge" id="legendBadge">🟢 Available &nbsp; 🔴 Maxed</span>
+                    </div>
+
+                    <div class="pool-grid" id="numberPool">
+                        <!-- Generated dynamically -->
+                    </div>
+
+                    <div class="d-none d-lg-flex justify-content-between mt-3 pt-2 border-top border-secondary">
+                        <small class="text-secondary">Total numbers: 6 (7 to 12)</small>
+                        <small class="text-secondary">Max usage: 2</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT COLUMN -->
+        <div class="col-12 col-lg-8 order-lg-1">
+
+            <!-- TOP: Selection Progress Bar & Status / Completion Message -->
+            <div class="progress-status-box">
+                <div class="d-flex justify-content-between mb-1">
+                    <small class="text-secondary fw-semibold">Selection Progress</small>
+                    <small class="text-info fw-bold" id="progressText">0%</small>
+                </div>
+                <div id="progressBar">
+                    <div id="progressFill"></div>
+                </div>
+                <p id="message">Ready to start selection!</p>
+            </div>
+
+            <!-- MIDDLE: 6 Selector Cards -->
+            <div class="row g-2 g-sm-3" id="selectors">
+                <!-- Generated dynamically -->
+            </div>
+
+            <!-- BOTTOM: Randomize All / Reset All Buttons -->
+            <div class="bottom-controls-section">
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-primary action-btn" id="randomBtn">
+                        🎲 Randomize All
+                    </button>
+                    <button class="btn btn-outline-light action-btn" id="resetBtn">
+                        ↻ Reset All
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    function startApp() {
+        // Configuration
+        const numbers = [7, 8, 9, 10, 11, 12];
+        const totalSelectors = 6;
+        const maxUsage = 2;
+
+        let selections = {};
+        let isRunning = false;
+
+        const selectorsEl = document.getElementById('selectors');
+        const numberPoolEl = document.getElementById('numberPool');
+        const legendBadgeEl = document.getElementById('legendBadge');
+        const progressFillEl = document.getElementById('progressFill');
+        const progressTextEl = document.getElementById('progressText');
+        const randomBtn = document.getElementById('randomBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const messageEl = document.getElementById('message');
+
+        // ====================================
+        // INITIALIZE APPLICATION
+        // ====================================
+        function initialize() {
+            selections = {};
+            selectorsEl.innerHTML = '';
+
+            for (let i = 1; i <= totalSelectors; i++) {
+                selections[i] = [];
+
+                const col = document.createElement('div');
+                col.className = 'col-6 col-md-4';
+                col.innerHTML = `
+                    <div class="selector-card">
+                        <div class="selector-title">Selector ${i}</div>
+                        <div class="selected-numbers" id="selector-${i}">
+                            <div class="number-ball placeholder-ball">?</div>
+                            <div class="number-ball placeholder-ball">?</div>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm random-single" data-id="${i}">
+                            🎲 Randomize
+                        </button>
+                    </div>
+                `;
+                selectorsEl.appendChild(col);
+            }
+
+            isRunning = false;
+            messageEl.classList.remove('completed-msg');
+            legendBadgeEl.classList.remove('completed-legend');
+            legendBadgeEl.innerHTML = '🟢 Available &nbsp; 🔴 Maxed';
+            updateUI();
+            messageEl.textContent = 'Ready to start selection!';
+        }
+
+        // ====================================
+        // GET NUMBER USAGE
+        // ====================================
+        function getUsage() {
+            const usage = {};
+            numbers.forEach(n => usage[n] = 0);
+
+            Object.values(selections).forEach(group => {
+                group.forEach(n => usage[n]++);
+            });
+
+            return usage;
+        }
+
+        // ====================================
+        // GET AVAILABLE NUMBERS
+        // ====================================
+        function getAvailableNumbers() {
+            const usage = getUsage();
+            return numbers.filter(n => usage[n] < maxUsage);
+        }
+
+        // ====================================
+        // UPDATE NUMBER POOL
+        // ====================================
+        function updatePool() {
+            const usage = getUsage();
+            numberPoolEl.innerHTML = '';
+
+            let availableCount = 0;
+
+            numbers.forEach(n => {
+                const available = usage[n] < maxUsage;
+                if (available) availableCount++;
+
+                const statusClass = available ? 'available' : 'unavailable';
+                const statusText = available ? 'Available' : 'Maxed Out';
+                const itemClass = available ? 'pool-item' : 'pool-item item-maxed';
+                const subClass = available ? 'status-sub' : 'status-sub sub-maxed';
+
+                const item = document.createElement('div');
+                item.className = itemClass;
+                item.innerHTML = `
+                    <div class="pool-number ${statusClass}">${n}</div>
+                    <div class="status-label">${usage[n]}/2 Used</div>
+                    <div class="${subClass}">${statusText}</div>
+                `;
+                numberPoolEl.appendChild(item);
+            });
+
+            // Update legend badge clearly for active vs. completed states
+            if (availableCount === 0) {
+                legendBadgeEl.classList.add('completed-legend');
+                legendBadgeEl.innerHTML = '🔴 Pool Exhausted (All 2/2)';
+            } else {
+                legendBadgeEl.classList.remove('completed-legend');
+                legendBadgeEl.innerHTML = '🟢 Available &nbsp; 🔴 Maxed';
+            }
+        }
+
+        // ====================================
+        // UPDATE STATISTICS
+        // ====================================
+        function updateStats() {
+            let total = 0;
+            let completed = 0;
+
+            Object.values(selections).forEach(group => {
+                total += group.length;
+                if (group.length === 2) completed++;
+            });
+
+            const progress = (total / (totalSelectors * 2)) * 100;
+            progressFillEl.style.width = progress + '%';
+            progressTextEl.textContent = Math.round(progress) + '%';
+
+            randomBtn.disabled = (completed === totalSelectors || isRunning);
+        }
+
+        // ====================================
+        // UPDATE INDIVIDUAL BUTTONS
+        // ====================================
+        function updateButtons() {
+            for (let i = 1; i <= totalSelectors; i++) {
+                const completed = selections[i].length === 2;
+                const button = selectorsEl.querySelector(`.random-single[data-id="${i}"]`);
+                if (!button) continue;
+
+                button.disabled = (completed || isRunning);
+                button.innerHTML = completed ? '✓ Completed' : '🎲 Randomize';
+                button.classList.toggle('btn-outline-info', !completed);
+                button.classList.toggle('btn-success', completed);
+            }
+        }
+
+        // ====================================
+        // UPDATE ALL UI
+        // ====================================
+        function updateUI() {
+            updatePool();
+            updateStats();
+            updateButtons();
+        }
+
+        // ====================================
+        // RANDOMIZE ONE SELECTOR (DEADLOCK-SAFE)
+        // ====================================
+        function randomizeSelector(selectorId) {
+            if (isRunning || selections[selectorId].length === 2) {
+                return false;
+            }
+
+            const usage = getUsage();
+            const available = getAvailableNumbers();
+
+            if (available.length < 2) {
+                messageEl.textContent = 'Not enough available numbers!';
+                return false;
+            }
+
+            // Prevent deadlock on the 5th selector so the 6th never gets stuck
+            const remainingSelectors = Object.values(selections).filter(g => g.length === 0).length;
+            let mustPick = [];
+
+            if (remainingSelectors === 2) {
+                mustPick = available.filter(n => usage[n] === 0);
+            }
+
+            const selected = [...mustPick];
+            const poolToDrawFrom = available.filter(n => !selected.includes(n));
+
+            // Fisher-Yates shuffle
+            for (let i = poolToDrawFrom.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [poolToDrawFrom[i], poolToDrawFrom[j]] = [poolToDrawFrom[j], poolToDrawFrom[i]];
+            }
+
+            while (selected.length < 2 && poolToDrawFrom.length > 0) {
+                selected.push(poolToDrawFrom.shift());
+            }
+
+            selected.sort((a, b) => a - b);
+            selections[selectorId] = selected;
+
+            const container = document.getElementById('selector-' + selectorId);
+            if (container) {
+                container.innerHTML = selected
+                    .map(num => `<div class="number-ball animate">${num}</div>`)
+                    .join('');
+            }
+
+            updateUI();
+            messageEl.textContent = `Selector ${selectorId} completed successfully!`;
+            checkCompletion();
+
+            return true;
+        }
+
+        // ====================================
+        // INDIVIDUAL RANDOMIZE BUTTON
+        // ====================================
+        selectorsEl.addEventListener('click', function (e) {
+            const btn = e.target.closest('.random-single');
+            if (!btn || isRunning) return;
+            const selectorId = Number(btn.getAttribute('data-id'));
+            randomizeSelector(selectorId);
+        });
+
+        // ====================================
+        // RANDOMIZE ALL REMAINING SELECTORS
+        // ====================================
+        randomBtn.addEventListener('click', function () {
+            if (isRunning) return;
+
+            const remaining = [];
+            for (let i = 1; i <= totalSelectors; i++) {
+                if (selections[i].length === 0) remaining.push(i);
+            }
+
+            if (remaining.length === 0) {
+                messageEl.textContent = 'All selectors are already completed!';
+                return;
+            }
+
+            isRunning = true;
+            updateButtons();
+            updateStats();
+
+            remaining.sort(() => Math.random() - 0.5);
+            messageEl.textContent = '🎲 Randomizing remaining selectors...';
+
+            remaining.forEach((id, index) => {
+                setTimeout(() => {
+                    isRunning = false;
+                    randomizeSelector(id);
+                    isRunning = true;
+                    updateButtons();
+                    updateStats();
+
+                    if (index === remaining.length - 1) {
+                        isRunning = false;
+                        updateUI();
+                        checkCompletion();
+                    }
+                }, index * 350);
+            });
+        });
+
+        // ====================================
+        // CHECK COMPLETION
+        // ====================================
+        function checkCompletion() {
+            const completed = Object.values(selections).every(group => group.length === 2);
+            if (completed) {
+                messageEl.textContent = '🎉 All 6 selectors completed successfully!';
+                messageEl.classList.add('completed-msg');
+                randomBtn.disabled = true;
+            }
+        }
+
+        // ====================================
+        // RESET ALL
+        // ====================================
+        resetBtn.addEventListener('click', function () {
+            if (isRunning) return;
+            initialize();
+            randomBtn.disabled = false;
+            messageEl.textContent = '↻ All selections have been reset!';
+        });
+
+        // Start Application
+        initialize();
+    }
+
+    // Vanilla JS - no external dependencies
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startApp);
+    } else {
+        startApp();
+    }
+})();
+</script>
+
+</body>
+</html>
